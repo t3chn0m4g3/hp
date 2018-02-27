@@ -1,0 +1,18 @@
+version: '2.1'
+
+networks:
+  conpot_local:
+
+services:
+
+# Conpot service
+  conpot:
+    build: .
+    container_name: conpot
+    restart: always
+    networks:
+     - conpot_local
+    ports:
+     - "1025:1025"
+     - "50100:50100"
+    image: "sissden/conpot:latest"
