@@ -1,18 +1,16 @@
 version: '2.1'
 
-networks:
-  conpot_local:
-
 services:
 
 # Conpot service
   conpot:
-    build: .
     container_name: conpot
+    environment:
+      - PYTHON_EGG_CACHE=/tmp/conpot
+    tmpfs:
+      - /tmp/conpot:exec,mode=777
+      - /var/run/conpot
     restart: always
-    networks:
-     - conpot_local
-    ports:
-     - "1025:1025"
-     - "50100:50100"
+    network_mode: "host"
+    read_only: true
     image: "sissden/conpot:latest"

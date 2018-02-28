@@ -1,5 +1,4 @@
-FROM alpine
-MAINTAINER MO
+FROM alpine:3.7
 
 # Include dist
 ADD dist/ /root/dist/
@@ -27,6 +26,7 @@ RUN apk -U --no-cache add bash \
 # Setup ConPot
     git clone https://github.com/mushorg/conpot /opt/conpot/ && \
     cd /opt/conpot/ && \
+    git checkout dc95c924050554d23544a890d76c5c06a7474b60 && \
     cp /root/dist/requirements.txt /opt/conpot/ && \
     python setup.py install && \
     cd / && \
@@ -55,4 +55,5 @@ RUN apk -U --no-cache add bash \
     rm -rf /var/cache/apk/*
 
 # Run supervisor upon container start
-CMD ["/usr/bin/conpot", "--template", "kamstrup_382", "--config", "/etc/conpot/conpot.cfg"]
+EXPOSE 1025 50100
+CMD ["/usr/bin/conpot", "--template", "kamstrup_382", "--logfile", "/tmp/conpot/conpot.log", "--config", "/etc/conpot/conpot.cfg"]
