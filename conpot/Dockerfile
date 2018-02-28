@@ -11,6 +11,7 @@ RUN apk -U --no-cache add bash \
                git \
                libev \
                libtool \
+               libcap \
                libxslt \
                libxslt-dev \
                mariadb-dev \
@@ -31,6 +32,7 @@ RUN apk -U --no-cache add bash \
     python setup.py install && \
     cd / && \
     rm -rf /opt/conpot /tmp/* /var/tmp/* && \
+    setcap cap_net_bind_service=+ep /usr/bin/conpot && \
 
 # Get wireshark manuf db for scapy, setup configs
     mkdir -p /etc/conpot /var/log/conpot /usr/share/wireshark && \
@@ -56,4 +58,5 @@ RUN apk -U --no-cache add bash \
 
 # Run supervisor upon container start
 EXPOSE 1025 50100
-CMD ["/usr/bin/conpot", "--template", "kamstrup_382", "--logfile", "/tmp/conpot/conpot.log", "--config", "/etc/conpot/conpot.cfg"]
+#CMD ["/usr/bin/conpot", "--template", "kamstrup_382", "--logfile", "/tmp/conpot/conpot.log", "--config", "/etc/conpot/conpot.cfg"]
+CMD /usr/bin/conpot --template $CONPOT_TEMPLATE --logfile /tmp/conpot/conpot.log --config /etc/conpot/conpot.cfg

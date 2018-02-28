@@ -7,6 +7,7 @@ services:
     container_name: conpot
     environment:
       - PYTHON_EGG_CACHE=/tmp/conpot
+      - CONPOT_TEMPLATE=default
     tmpfs:
       - /tmp/conpot:exec,mode=777
       - /var/run/conpot
