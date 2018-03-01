@@ -29,7 +29,8 @@ RUN apk -U --no-cache add bash \
     cd /opt/conpot/ && \
     git checkout dc95c924050554d23544a890d76c5c06a7474b60 && \
     cp /root/dist/requirements.txt /opt/conpot/ && \
-    python setup.py install && \
+    cp /root/dist/snmp_server.py /opt/conpot/conpot/protocols/snmp/ && \
+    cd /opt/conpot && python setup.py install && \
     cd / && \
     rm -rf /opt/conpot /tmp/* /var/tmp/* && \
     setcap cap_net_bind_service=+ep /usr/bin/conpot && \

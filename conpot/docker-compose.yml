@@ -8,9 +8,10 @@ services:
     environment:
       - PYTHON_EGG_CACHE=/tmp/conpot
       - CONPOT_TEMPLATE=default
+      - CONPOT_TMP=/tmp/conpot
     tmpfs:
-      - /tmp/conpot:exec,mode=777
-      - /var/run/conpot
+      - /tmp/conpot:exec
+      - /var/run/conpot/
     restart: always
     network_mode: "host"
     read_only: true
