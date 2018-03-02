@@ -1,3 +1,4 @@
+# CONPOT TEMPLATE=[IEC104, default, guardian_ast, ipmi, kamstrup_382, proxy]
 version: '2.1'
 
 services:
@@ -5,13 +6,25 @@ services:
 # Conpot service
   conpot:
     container_name: conpot
+    extra_hosts:
+      - hpfeeds.eval.sissden.eu:213.189.32.146
+      - objects.eval.sissden.eu:213.189.32.146
     environment:
-      - PYTHON_EGG_CACHE=/tmp/conpot
+      - CONPOT_CONFIG=/etc/conpot/conpot.cfg
+      - CONPOT_HPFEEDS_HOST=hpfeeds.eval.sissden.eu
+      - CONPOT_HPFEEDS_PORT=80
+      - CONPOT_HPFEEDS_IDENT=t3chn0m4g3
+      - CONPOT_HPFEEDS_SECRET=3g4m0nhc3t
+      - CONPOT_LOG=/tmp/conpot/conpot.log
+      - CONPOT_JSON=/tmp/conpot/conpot.json
       - CONPOT_TEMPLATE=default
       - CONPOT_TMP=/tmp/conpot
+      - PYTHON_EGG_CACHE=/tmp/conpot
     tmpfs:
       - /tmp/conpot:exec
       - /var/run/conpot/
+        #    volumes:
+        #      - /root/hp/conpot/dist/conpot.cfg:/etc/conpot/conpot.cfg
     restart: always
     network_mode: "host"
     read_only: true

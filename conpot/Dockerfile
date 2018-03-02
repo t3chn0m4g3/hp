@@ -30,7 +30,8 @@ RUN apk -U --no-cache add bash \
     git checkout dc95c924050554d23544a890d76c5c06a7474b60 && \
     cp /root/dist/requirements.txt /opt/conpot/ && \
     cp /root/dist/snmp_server.py /opt/conpot/conpot/protocols/snmp/ && \
-    cd /opt/conpot && python setup.py install && \
+    cp /root/dist/conpot /opt/conpot/bin && \
+    python setup.py install && \
     cd / && \
     rm -rf /opt/conpot /tmp/* /var/tmp/* && \
     setcap cap_net_bind_service=+ep /usr/bin/conpot && \
@@ -38,8 +39,8 @@ RUN apk -U --no-cache add bash \
 # Get wireshark manuf db for scapy, setup configs
     mkdir -p /etc/conpot /var/log/conpot /usr/share/wireshark && \
     wget https://github.com/wireshark/wireshark/raw/master/manuf -o /usr/share/wireshark/manuf && \
-    mv /root/dist/conpot.cfg /etc/conpot/conpot.cfg && \
-    mv /root/dist/kamstrup_382/template.xml /usr/lib/python2.7/site-packages/Conpot-0.5.1-py2.7.egg/conpot/templates/kamstrup_382/ && \
+    cp /root/dist/conpot.cfg /etc/conpot/conpot.cfg && \
+    cp -R /root/dist/templates /usr/lib/python2.7/site-packages/Conpot-0.5.1-py2.7.egg/conpot/ && \
 
 # Clean up
     apk del --purge build-base \
@@ -57,7 +58,7 @@ RUN apk -U --no-cache add bash \
     rm -rf /root/* && \
     rm -rf /var/cache/apk/*
 
-# Run supervisor upon container start
-EXPOSE 1025 50100
-#CMD ["/usr/bin/conpot", "--template", "kamstrup_382", "--logfile", "/tmp/conpot/conpot.log", "--config", "/etc/conpot/conpot.cfg"]
-CMD /usr/bin/conpot --template $CONPOT_TEMPLATE --logfile /tmp/conpot/conpot.log --config /etc/conpot/conpot.cfg
+# Expose all possible ports
+EXPOSE 80 102 161 502 623 1025 1026 1234 2404 10001 44818 47808 50100
+# Start conpot
+CMD echo $CONPOT_JSON && /usr/bin/conpot --template $CONPOT_TEMPLATE --logfile $CONPOT_LOG --config $CONPOT_CONFIG
