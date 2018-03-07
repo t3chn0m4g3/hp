@@ -1,19 +1,24 @@
 version: '2.1'
 
-networks:
-  glastopf_local:
-
 services:
 
 # Glastopf service
   glastopf:
     container_name: glastopf
+    extra_hosts:
+      - hpfeeds.eval.sissden.eu:213.189.32.146
+      - objects.eval.sissden.eu:213.189.32.146
+    environment:
+      - GLASTOPF_CONFIG=/opt/glastopf/glastopf.cfg
+      - GLASTOPF_HPFEEDS_HOST=1.2.3.4
+      - GLASTOPF_HPFEEDS_PORT=80
+      - GLASTOPF_HPFEEDS_IDENT=user
+      - GLASTOPF_HPFEEDS_SECRET=pass
+      - PYTHON_EGG_CACHE=/tmp/glastopf
+    tmpfs:
+      - /tmp/glastopf:exec
+      - /var/run/glastopf/
     restart: always
-    networks:
-     - glastopf_local
-    ports:
-     - "80:80"
-    image: "dtagdevsec/glastopf:1710"
-    volumes:
-     - /data/glastopf/db:/opt/glastopf/db
-     - /data/glastopf/log:/opt/glastopf/log
+    network_mode: "host"
+    read_only: true
+    image: "sissden/glastopf:latest"

@@ -1,0 +1,106 @@
+#!/usr/bin/env python
+
+import sys
+import logging
+import os
+from ConfigParser import SafeConfigParser
+import logging.handlers
+import argparse
+
+from gevent.wsgi import WSGIServer
+import gevent
+
+import glastopf
+from glastopf.wsgi_wrapper import GlastopfWSGI
+from glastopf.glastopf import GlastopfHoneypot
+
+
+logger = logging.getLogger()
+
+
+def setup_logging(logconsole, logfile, verbose, work_dir):
+    log_path = os.path.join(work_dir, 'log')
+    logger.setLevel(logging.DEBUG)
+    if not os.path.isdir(log_path):
+        os.mkdir(log_path)
+
+    formatter = logging.Formatter('%(asctime)-15s (%(name)s) %(message)s')
+    root_logger = logging.getLogger()
+    log_level = logging.DEBUG if verbose else logging.INFO
+
+    if logconsole:
+        console_log = logging.StreamHandler()
+        console_log.setLevel(log_level)
+        console_log.setFormatter(formatter)
+        root_logger.addHandler(console_log)
+
+    if logfile:
+        logfile = os.path.join(work_dir, logfile)
+        file_log = logging.handlers.TimedRotatingFileHandler(
+            logfile,
+            when="midnight",
+            backupCount=31)
+        file_log.setLevel(log_level)
+        file_log.setFormatter(formatter)
+        root_logger.addHandler(file_log)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Glastopf runner')
+    #defaults to current directory (aka. working directory)
+    parser.add_argument('--workdir', dest='workdir', default=os.getcwd())
+    parser.add_argument('--prepare', action='store_true', default=False)
+    parser.add_argument('--version', action='store_true', default=False,
+                        help='Prints version and exits.')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False)
+
+    args = parser.parse_args()
+
+    if args.version:
+        print 'Glastopf {0}'.format(glastopf.__version__)
+        sys.exit(0)
+
+    #prepare directory if workdir/data doesn't exist or if we are asked to do it.
+    if args.prepare or not os.path.isdir(os.path.join(args.workdir, 'data/')):
+        GlastopfHoneypot.prepare_environment(args.workdir)
+
+    conf_parser = SafeConfigParser(os.environ)
+    config_file = os.path.join(args.workdir, "glastopf.cfg")
+    if not os.path.isfile(config_file):
+        sys.exit("Could not find configuration file: glastopf.cfg")
+    conf_parser.read(config_file)
+    if conf_parser.getboolean("logging", "filelog_enabled"):
+        logfile = conf_parser.get("logging", "logfile")
+    else:
+        logfile = None
+    logconsole = conf_parser.getboolean("logging", "consolelog_enabled")
+    logger = logging.getLogger()
+    setup_logging(logconsole, logfile, args.verbose, args.workdir)
+
+    host = conf_parser.get("webserver", "host")
+    port = conf_parser.getint("webserver", "port")
+    
+    if conf_parser.get("ssl", "enabled"):
+        ssl = {
+            'certfile': conf_parser.get("ssl", "certfile"),
+            'keyfile': conf_parser.get("ssl", "keyfile"),
+            'ciphers': 'RC4',
+        }
+
+
+    honeypot = GlastopfHoneypot(work_dir=args.workdir)
+    wsgi_wrapper = GlastopfWSGI(honeypot)
+
+    try:
+        if conf_parser.get("ssl", "enabled") == True:
+            server = WSGIServer((host, port), wsgi_wrapper.application, log=None, **ssl)
+        else:
+            server = WSGIServer((host, port), wsgi_wrapper.application, log=None)
+        wsgi_greenlet = gevent.Greenlet(server.start())
+        #start background worker and drop privs
+        workers = honeypot.start_background_workers()
+        workers.append(wsgi_greenlet)
+        gevent.joinall(workers, raise_error=True)
+
+    except KeyboardInterrupt as ex:
+        honeypot.stop_background_workers()
