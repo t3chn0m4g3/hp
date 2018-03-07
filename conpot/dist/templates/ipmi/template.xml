@@ -11,7 +11,7 @@
         <!-- Core value that can be retrieved from the databus by key -->
         <key_value_mappings>
           <key name="SystemName">
-              <value type="value">"Technodrome"</value>
+              <value type="value">"Hall 1"</value>
           </key>
         </key_value_mappings>
     </databus>

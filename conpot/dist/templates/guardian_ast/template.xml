@@ -23,7 +23,7 @@
                 <value type="value">"PREMIUM"</value>
             </key>
             <key name="station_name">
-                <value type="value">"STATOIL STATION"</value>
+                <value type="value">"SHELL"</value>
             </key>
             <key name="vol1">
                 <value type="value">random.randint(1000, 9050)</value>

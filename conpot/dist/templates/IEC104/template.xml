@@ -39,13 +39,13 @@
                 <value type="function">conpot.emulators.misc.uptime.Uptime</value>
             </key>
             <key name="sysContact">
-                <value type="value">""</value>
+                <value type="value">"Corporate IT"</value>
             </key>
             <key name="sysName">
-                <value type="value">""</value>
+                <value type="value">"DE-BER01"</value>
             </key>
             <key name="sysLocation">
-                <value type="value">""</value>
+                <value type="value">"BER01, T2E"</value>
             </key>
             <key name="sysServices">
                 <value type="value">"72"</value>
@@ -168,7 +168,7 @@
                 <value type="value">0</value>
             </key>
             <key name="ipAdEntAddr">
-                <value type="value">"163.172.189.137"</value>
+                <value type="value">"217.172.190.137"</value>
             </key>
             <key name="ipAdEntIfIndex">
                 <value type="value">1</value>
@@ -305,7 +305,7 @@
                 <value type="value">2</value>
             </key>
             <key name="tcpConnLocalAddress">
-                <value type="value">"163.172.189.137"</value>
+                <value type="value">"217.172.190.137"</value>
             </key>
             <key name="tcpConnLocalPort">
                 <value type="value">2404</value>
@@ -336,7 +336,7 @@
                 <value type="value">47</value>
             </key>
             <key name="udpLocalAddress">
-                <value type="value">"163.172.189.137"</value>
+                <value type="value">"217.172.190.137"</value>
             </key>
             <key name="udpLocalPort">
                 <value type="value">161</value>

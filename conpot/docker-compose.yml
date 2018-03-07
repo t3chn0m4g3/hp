@@ -13,18 +13,17 @@ services:
       - CONPOT_CONFIG=/etc/conpot/conpot.cfg
       - CONPOT_HPFEEDS_HOST=hpfeeds.eval.sissden.eu
       - CONPOT_HPFEEDS_PORT=80
-      - CONPOT_HPFEEDS_IDENT=t3chn0m4g3
-      - CONPOT_HPFEEDS_SECRET=3g4m0nhc3t
+      - CONPOT_HPFEEDS_IDENT=user
+      - CONPOT_HPFEEDS_SECRET=pass
       - CONPOT_LOG=/tmp/conpot/conpot.log
-      - CONPOT_JSON=/tmp/conpot/conpot.json
       - CONPOT_TEMPLATE=default
       - CONPOT_TMP=/tmp/conpot
       - PYTHON_EGG_CACHE=/tmp/conpot
     tmpfs:
       - /tmp/conpot:exec
       - /var/run/conpot/
-        #    volumes:
-        #      - /root/hp/conpot/dist/conpot.cfg:/etc/conpot/conpot.cfg
+    volumes:
+      - /root/hp/conpot/dist/conpot.cfg:/etc/conpot/conpot.cfg
     restart: always
     network_mode: "host"
     read_only: true

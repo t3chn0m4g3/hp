@@ -33,6 +33,9 @@ RUN apk -U --no-cache add bash \
     cp /root/dist/conpot /opt/conpot/bin && \
     python setup.py install && \
     cd / && \
+    #chmod u+x /usr/lib/python2.7/site-packages/Conpot-0.5.1-py2.7.egg/bin/conpot && \
+    cp /root/dist/conpot.bin /usr/bin/conpot && \
+    chmod u+x /usr/bin/conpot && \
     rm -rf /opt/conpot /tmp/* /var/tmp/* && \
     setcap cap_net_bind_service=+ep /usr/bin/conpot && \
 
@@ -60,5 +63,6 @@ RUN apk -U --no-cache add bash \
 
 # Expose all possible ports
 EXPOSE 80 102 161 502 623 1025 1026 1234 2404 10001 44818 47808 50100
+
 # Start conpot
-CMD echo $CONPOT_JSON && /usr/bin/conpot --template $CONPOT_TEMPLATE --logfile $CONPOT_LOG --config $CONPOT_CONFIG
+CMD /usr/bin/conpot --template $CONPOT_TEMPLATE --logfile $CONPOT_LOG --config $CONPOT_CONFIG
