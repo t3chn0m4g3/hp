@@ -33,7 +33,6 @@ RUN apk -U --no-cache add bash \
     cp /root/dist/conpot /opt/conpot/bin && \
     python setup.py install && \
     cd / && \
-    #chmod u+x /usr/lib/python2.7/site-packages/Conpot-0.5.1-py2.7.egg/bin/conpot && \
     cp /root/dist/conpot.bin /usr/bin/conpot && \
     chmod u+x /usr/bin/conpot && \
     rm -rf /opt/conpot /tmp/* /var/tmp/* && \
