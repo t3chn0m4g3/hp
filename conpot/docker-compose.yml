@@ -22,8 +22,6 @@ services:
     tmpfs:
       - /tmp/conpot:exec
       - /var/run/conpot/
-    volumes:
-      - /root/hp/conpot/dist/conpot.cfg:/etc/conpot/conpot.cfg
     restart: always
     network_mode: "host"
     read_only: true
