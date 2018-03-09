@@ -30,8 +30,11 @@ RUN apk -U upgrade && \
 # Install glastopf from git
     git clone https://github.com/mushorg/glastopf.git /opt/glastopf && \
     cd /opt/glastopf && \
-    cp /root/dist/glastopf.py /opt/glastopf/glastopf/ && \
-    cp /root/dist/glastopf-runner /opt/glastopf/bin/ && \
+    #cp /root/dist/glastopf.py /opt/glastopf/glastopf/ && \
+    #cp /root/dist/glastopf-runner /opt/glastopf/bin/ && \
+    cp /root/dist/log_hpfeeds.py /opt/glastopf/glastopf/modules/reporting/auxiliary/ && \
+    cp /root/dist/log_s3.py /opt/glastopf/glastopf/modules/reporting/auxiliary/ && \
+    cp /root/dist/requirements.txt /opt/glastopf/ && \
     python setup.py install && \
     cd / && \
     rm -rf /opt/glastopf /tmp/* /var/tmp/* && \
@@ -50,4 +53,4 @@ RUN apk -U upgrade && \
 # Set workdir and start glastopf
 WORKDIR /tmp/glastopf/
 #CMD ["glastopf-runner"]
-CMD echo $GLASTOPF_HPFEEDS_HOST && cp /opt/glastopf/glastopf.cfg /tmp/glastopf && glastopf-runner
+CMD cp /opt/glastopf/glastopf.cfg /tmp/glastopf && glastopf-runner
