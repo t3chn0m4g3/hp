@@ -1,22 +1,52 @@
-FROM alpine 
+FROM alpine:3.7
 MAINTAINER MO 
 
 # Include dist
 ADD dist/ /root/dist/
 
 # Install packages
-RUN apk -U upgrade && \
-    apk add autoconf bash bind-tools build-base cython git libffi libffi-dev make py-asn1 \
-            py-cffi py-chardet py-chardet py-cparser py-cryptography py-dateutil \
-            py-enum34 py-idna py-ipaddress py-jinja2 py-lxml py-mysqldb py-openssl \
-            py-pip py-requests py-setuptools python python-dev && \
+RUN apk -U --no-cache add autoconf \ 
+               bash \ 
+               bind-tools \
+               build-base \
+               cython \
+               git \
+               libffi \
+               libffi-dev \
+               make \
+               py-asn1 \
+               py-cffi \
+               py-chardet \
+               py-cparser \
+               py-cryptography \
+               py-dateutil \
+               py-enum34 \
+               py-idna \
+               py-ipaddress \
+               py-jinja2 \
+               py-lxml \
+               py-mysqldb \
+               py-openssl \
+               py-pip \
+               py-requests \
+               py-setuptools \
+               python \
+               python-dev && \
     apk -U add --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
-            py-beautifulsoup4 php7 php7-dev py-cssselect py-gevent py-greenlet py-mongo \
-            py-sqlalchemy py-webob && \
+               py-beautifulsoup4 \
+               php7 \
+               php7-dev \
+               py-cssselect \
+               py-gevent \
+               py-greenlet \
+               py-mongo \
+               py-sqlalchemy \
+               py-webob && \
 
 # Install php sandbox from git
-    git clone https://github.com/glastopf/BFR.git /opt/BFR && \
+    git clone https://github.com/mushorg/BFR /opt/BFR && \
     cd /opt/BFR && \
+    git checkout 508729202428a35bcc6bb27dd97b831f7e5009b5 && \
     phpize7 && \
     ./configure \
       --with-php-config=/usr/bin/php-config7 \
@@ -30,9 +60,8 @@ RUN apk -U upgrade && \
 # Install glastopf from git
     git clone https://github.com/mushorg/glastopf.git /opt/glastopf && \
     cd /opt/glastopf && \
-    #cp /root/dist/glastopf.py /opt/glastopf/glastopf/ && \
-    #cp /root/dist/glastopf-runner /opt/glastopf/bin/ && \
-    cp /root/dist/log_hpfeeds.py /opt/glastopf/glastopf/modules/reporting/auxiliary/ && \
+    git checkout e47dfa16c2b8304405d1a70a07e3dbbaf836374f && \
+    cp /root/dist/base_logger.py /opt/glastopf/glastopf/modules/reporting/auxiliary/ && \
     cp /root/dist/log_s3.py /opt/glastopf/glastopf/modules/reporting/auxiliary/ && \
     cp /root/dist/requirements.txt /opt/glastopf/ && \
     python setup.py install && \
@@ -40,17 +69,20 @@ RUN apk -U upgrade && \
     rm -rf /opt/glastopf /tmp/* /var/tmp/* && \
 
 # Setup user, groups and configs
-    addgroup -g 2000 glastopf && \
-    adduser -S -H -u 2000 -D -g 2000 glastopf && \
     mkdir -p /opt/glastopf && \
     mv /root/dist/glastopf.cfg /opt/glastopf/ && \
 
 # Clean up
-    apk del autoconf build-base git libffi-dev php7-dev python-dev && \
+    apk del --purge \
+            autoconf \
+            build-base \
+            git \
+            libffi-dev \
+            php7-dev \
+            python-dev && \
     rm -rf /root/* && \
     rm -rf /var/cache/apk/*
 
 # Set workdir and start glastopf
 WORKDIR /tmp/glastopf/
-#CMD ["glastopf-runner"]
 CMD cp /opt/glastopf/glastopf.cfg /tmp/glastopf && glastopf-runner

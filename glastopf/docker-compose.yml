@@ -8,6 +8,7 @@ services:
     extra_hosts:
       - hpfeeds.eval.sissden.eu:213.189.32.146
       - objects.eval.sissden.eu:213.189.32.146
+      - s3.eval.sissden.eu:214.189.32.146
     environment:
       - GLASTOPF_HPFEEDS_HOST=hpfeeds.eval.sissden.eu
       - GLASTOPF_HPFEEDS_PORT=80
@@ -15,7 +16,7 @@ services:
       - GLASTOPF_HPFEEDS_SECRET=pass
       - GLASTOPF_HPFEEDS_EVENTS=glastopf.events
       - GLASTOPF_HPFEEDS_FILES=glastopf.files
-      - GLASTOPF_S3_ENDPOINT=http://127.0.0.1:8080/
+      - GLASTOPF_S3_ENDPOINT=http://s3.eval.sissden.eu:8080/
       - GLASTOPF_S3_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
       - GLASTOPF_S3_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
       - GLASTOPF_S3_BUCKET=glastopf
