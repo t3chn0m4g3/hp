@@ -84,5 +84,7 @@ RUN apk -U --no-cache add autoconf \
     rm -rf /var/cache/apk/*
 
 # Set workdir and start glastopf
+# Expose all possible ports
+EXPOSE 80
 WORKDIR /tmp/glastopf/
 CMD cp /opt/glastopf/glastopf.cfg /tmp/glastopf && glastopf-runner
