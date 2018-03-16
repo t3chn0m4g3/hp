@@ -5,6 +5,7 @@ services:
 
 # Conpot service
   conpot:
+    build: .
     container_name: conpot
     extra_hosts:
       - hpfeeds.eval.sissden.eu:213.189.32.146

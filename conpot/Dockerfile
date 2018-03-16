@@ -27,12 +27,13 @@ RUN apk -U --no-cache add bash \
 # Setup ConPot
     git clone https://github.com/mushorg/conpot /opt/conpot/ && \
     cd /opt/conpot/ && \
-    git checkout dc95c924050554d23544a890d76c5c06a7474b60 && \
+    git checkout d157229e4587188ad3d3af5dddcd71200713852d && \
     cp /root/dist/requirements.txt /opt/conpot/ && \
+    # Patch to accept ENV for MIB path
     cp /root/dist/snmp_server.py /opt/conpot/conpot/protocols/snmp/ && \
-    cp /root/dist/conpot /opt/conpot/bin && \
     python setup.py install && \
     cd / && \
+    # Monkey patch, see https://github.com/mushorg/conpot/issues/361
     cp /root/dist/conpot.bin /usr/bin/conpot && \
     chmod u+x /usr/bin/conpot && \
     rm -rf /opt/conpot /tmp/* /var/tmp/* && \
