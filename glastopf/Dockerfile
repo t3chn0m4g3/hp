@@ -13,6 +13,7 @@ RUN apk -U --no-cache add autoconf \
                git \
                libffi \
                libffi-dev \
+               libcap \
                make \
                py-asn1 \
                py-cffi \
@@ -60,13 +61,14 @@ RUN apk -U --no-cache add autoconf \
 # Install glastopf from git
     git clone https://github.com/mushorg/glastopf.git /opt/glastopf && \
     cd /opt/glastopf && \
-    git checkout e47dfa16c2b8304405d1a70a07e3dbbaf836374f && \
+    git checkout c4932d9cb513d284142e2c0d66284221201d7477 && \
     cp /root/dist/base_logger.py /opt/glastopf/glastopf/modules/reporting/auxiliary/ && \
     cp /root/dist/log_s3.py /opt/glastopf/glastopf/modules/reporting/auxiliary/ && \
     cp /root/dist/requirements.txt /opt/glastopf/ && \
     python setup.py install && \
     cd / && \
     rm -rf /opt/glastopf /tmp/* /var/tmp/* && \
+    setcap cap_net_bind_service=+ep /usr/bin/glastopf-runner && \
 
 # Setup user, groups and configs
     mkdir -p /opt/glastopf && \

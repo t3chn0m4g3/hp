@@ -4,6 +4,7 @@ services:
 
 # Glastopf service
   glastopf:
+    build: .
     container_name: glastopf
     extra_hosts:
       - hpfeeds.eval.sissden.eu:213.189.32.146
