@@ -12,7 +12,7 @@ services:
       - objects.eval.sissden.eu:213.189.32.146
     environment:
       - CONPOT_CONFIG=/etc/conpot/conpot.cfg
-      - CONPOT_HPFEEDS_ENABLED=False
+      - CONPOT_HPFEEDS_ENABLED=True
       - CONPOT_HPFEEDS_HOST=hpfeeds.eval.sissden.eu
       - CONPOT_HPFEEDS_PORT=80
       - CONPOT_HPFEEDS_IDENT=user

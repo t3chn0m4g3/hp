@@ -25,6 +25,7 @@ RUN apk -U --no-cache add \
 # Setup ConPot
     git clone --depth=1 https://github.com/mushorg/conpot /opt/conpot && \
     cd /opt/conpot/ && \
+    # Pip freeze
     cp /root/dist/requirements.txt /opt/conpot/ && \
     # Patch to accept ENV for MIB path
     cp /root/dist/snmp_server.py /opt/conpot/conpot/protocols/snmp/ && \
