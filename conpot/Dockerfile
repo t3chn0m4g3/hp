@@ -25,10 +25,12 @@ RUN apk -U --no-cache add \
 # Setup ConPot
     git clone --depth=1 https://github.com/mushorg/conpot /opt/conpot && \
     cd /opt/conpot/ && \
+    # Patch Conpot to PR#401
+    git pull origin pull/401/head && \
     # Pip freeze
     cp /root/dist/requirements.txt /opt/conpot/ && \
     # Patch to accept ENV for MIB path
-    cp /root/dist/snmp_server.py /opt/conpot/conpot/protocols/snmp/ && \
+    sed -i "s/tmp_mib_dir = tempfile.mkdtemp()/tmp_mib_dir = tempfile.mkdtemp(dir=os.environ['CONPOT_TMP'])/" /opt/conpot/conpot/protocols/snmp/snmp_server.py && \
     # Change template default ports if <1024
     sed -i 's/port="2121"/port="21"/' /opt/conpot/conpot/templates/default/ftp/ftp.xml && \
     sed -i 's/port="8800"/port="80"/' /opt/conpot/conpot/templates/default/http/http.xml && \
